@@ -15,7 +15,7 @@
     "@tanstack/query-core": "^5.51.21",
     "@tanstack/vue-query": "^5.51.21",
     "@types/yup": "^0.32.0",
-    "axios": "^1.7.3",
+    "axios": "^1.7.6",
     "nuxt": "^3.12.4",
     "pinia": "^2.2.1",
     "vue": "latest",

@@ -10,6 +10,7 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-  plugins: ["~/plugins/vue-query"],
-  modules: ["@nuxt/ui", "@pinia/nuxt"],
+  plugins: ["~/plugins/vue-query", "~/plugins/axios"],
+  modules: ["@nuxt/ui", "@pinia/nuxt",],
+
 });

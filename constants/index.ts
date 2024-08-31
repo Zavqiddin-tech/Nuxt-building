@@ -2,7 +2,7 @@ export const sidebarMenu = [
   {
     name: "Dashboard",
     url: "/menu/dashboard",
-    icon: "i-mage:chart-fill",
+    icon: "i-solar:chart-square-linear",
   },
   {
     name: "Sarmoya",
@@ -17,7 +17,7 @@ export const sidebarMenu = [
   {
     name: "Podval",
     url: "/menu/basement",
-    icon: "i-cbi:downstairs-basement",
+    icon: "i-solar:graph-down-outline",
   },
 
   {

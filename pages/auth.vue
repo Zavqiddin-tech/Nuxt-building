@@ -2,24 +2,27 @@
 useHead({
   title: "Authorization",
 });
+const router = useRouter()
 definePageMeta({
   layout: "auth",
-  middleware: [function (to, from) {}, "auth"],
 });
+const cookie = useCookie('token')
+import axios from "axios";
+import { useMutation } from "@tanstack/vue-query";
+import { storeToRefs } from "pinia";
+import { useUrlStore } from "~/store/url.store";
+const {url} = storeToRefs(useUrlStore())
 
-const nuxtCookie = useCookie('auth')
 
-const get = () => {
 
-  nuxtCookie.value = 'cnsdjc43nfoj3fwnc'
-};
+
 
 // Form uchun sozlama
 import { object, string, type InferType } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
 
 const schema = object({
-  email: string().email("Invalid email").required("Required"),
+  userName: string().required("Required"),
   password: string()
     .min(8, "Must be at least 8 characters")
     .required("Required"),
@@ -27,32 +30,44 @@ const schema = object({
 
 type Schema = InferType<typeof schema>;
 
-const state = reactive({
-  email: undefined,
+const state = ref({
+  userName: undefined,
   password: undefined,
 });
 
+const create = async () => {
+	const res = await axios.post(`${url.value}/auth/login`, state.value)
+	return res.data
+}
+const mutation = useMutation({
+	mutationFn: create,
+	onSuccess: (data) => {
+		useToast().add({title: 'Muvaffaqiyatli'})
+    console.log(data);
+    cookie.value = data.accessToken
+    router.push('/')
+	},
+	onError: (error) => {
+		useToast().add({title: error.message})
+	}
+})
+
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  // Do something with event.data
-  console.log(event.data);
+ event.preventDefault()
+	mutation.mutate()
 }
 </script>
 
 <template>
   <div class="p-4 bg-white dark:bg-black w-[350px] rounded-lg">
     <div class="pb-6 flex justify-center">
-      <div class="logo flex items-center gap-2">
+      <div>
         <div class="logo-title">Login</div>
-
-        <UIcon
-          name="i-material-symbols-light:stacked-line-chart-rounded"
-          class="w-10 h-10 text-[#36bcba]"
-        />
       </div>
     </div>
     <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-      <UFormGroup label="login" name="email" class="mb-8">
-        <UInput v-model="state.email" size="lg" />
+      <UFormGroup label="login" name="userName" class="mb-8">
+        <UInput v-model="state.userName" size="lg" />
       </UFormGroup>
 
       <UFormGroup label="password" name="password">
@@ -60,7 +75,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       </UFormGroup>
 
       <div class="pt-2">
-        <UButton @click="get()" type="submit" size="lg"> Submit </UButton>
+        <UButton type="submit" size="lg"> Submit </UButton>
       </div>
     </UForm>
   </div>
